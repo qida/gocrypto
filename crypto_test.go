@@ -2,54 +2,61 @@ package gocrypto
 
 import (
 	//"fmt"
-	. "gopkg.in/check.v1"
+	"github.com/bmizerany/assert"
 	"testing"
 )
 
-var aesKey = "astaxie12798akljzmknm.ahkjkljl;k"
-var input = "test skcloud crypto"
-var md5Output = "37d5bf6f759c49527e78f8db7c051276"
-var base64Output = "dGVzdCBza2Nsb3VkIGNyeXB0bw=="
-var aesOutput = "XGFffDlOwueH4DCVD+5Um/S/OA=="
+var (
+	aesKey         = "astaxie12798akljzmknm.ahkjkljl;k"
+	input          = "test skcloud crypto"
+	md5Output      = "37d5bf6f759c49527e78f8db7c051276"
+	base64Output   = "dGVzdCBza2Nsb3VkIGNyeXB0bw=="
+	aesOutput      = "XGFffDlOwueH4DCVD+5Um/S/OA=="
+	sha1Output     = "82d2ba7d706239e6f3bfcf0b752cf173f91b5d9c"
+	hmacKey        = "hash key"
+	hmacSha1Output = "aa38b69e64725e3687c549120645fdbbf7281923"
+)
 
-func Test(t *testing.T) { TestingT(t) }
-
-type MySuite struct{}
-
-var _ = Suite(&MySuite{})
-
-func (s *MySuite) TestMD5(c *C) {
+func TestMD5(t *testing.T) {
 	out := GetMD5(input)
-	c.Assert(out, Equals, md5Output)
-	c.Assert(CheckMD5(input, out), Equals, true)
-	c.Assert(CheckMD5(input, input), Equals, false)
-
+	assert.Equal(t, md5Output, out)
+	assert.Equal(t, true, CheckMD5(input, out))
+	assert.Equal(t, false, CheckMD5(input, input))
 }
 
-func (s *MySuite) TestBase64(c *C) {
+func TestSha1(t *testing.T) {
+	out := GetSha1(input)
+	assert.Equal(t, sha1Output, out)
+
+	out2 := GetHmacSha1(input, hmacKey)
+	assert.Equal(t, hmacSha1Output, out2)
+}
+
+func TestBase64(t *testing.T) {
 	out := Base64Encode(input)
-	c.Assert(out, Equals, base64Output)
+	assert.Equal(t, base64Output, out)
 
 	in, e := Base64Decode(base64Output)
-	c.Assert(e, Equals, nil)
-	c.Assert(in, Equals, input)
+	assert.Equal(t, nil, e)
+	assert.Equal(t, input, in)
 }
 
-func (s *MySuite) TestGetRandomKey(c *C) {
+func TestGetRandomKey(t *testing.T) {
 	out1 := GetRandomKey()
 	out2 := GetRandomKey()
-	c.Assert(len(out1), Equals, 40)
-	c.Assert(len(out2), Equals, 40)
-	c.Assert(out1, Not(Equals), out2)
+
+	assert.Equal(t, 40, len(out1))
+	assert.Equal(t, 40, len(out2))
+	assert.NotEqual(t, out1, out2)
 
 }
 
-func (s *MySuite) TestAES(c *C) {
+func TestAES(t *testing.T) {
 	out1, err1 := AESEncode(input, aesKey)
-	c.Assert(err1, Equals, nil)
-	c.Assert(out1, Equals, aesOutput)
+	assert.Equal(t, nil, err1)
+	assert.Equal(t, aesOutput, out1)
 
 	out2, err2 := AESDecode(aesOutput, aesKey)
-	c.Assert(err2, Equals, nil)
-	c.Assert(out2, Equals, input)
+	assert.Equal(t, nil, err2)
+	assert.Equal(t, input, out2)
 }

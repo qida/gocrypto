@@ -3,6 +3,7 @@ package gocrypto
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha1"
 	"encoding/base64"
@@ -22,6 +23,12 @@ func GetSha1(data string) string {
 	t := sha1.New()
 	io.WriteString(t, data)
 	return fmt.Sprintf("%x", t.Sum(nil))
+}
+
+func GetHmacSha1(data string, key string) string {
+	mac := hmac.New(sha1.New, []byte(key))
+	mac.Write([]byte(data))
+	return fmt.Sprintf("%x", mac.Sum(nil))
 }
 
 func GetMD5(data string) string {
