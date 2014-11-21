@@ -1,4 +1,4 @@
-package gocrypto
+package crypto
 
 import (
 	"crypto/aes"
@@ -9,8 +9,9 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"github.com/nu7hatch/gouuid"
 	"io"
+
+	"github.com/nu7hatch/gouuid"
 )
 
 func GetRandomKey() string {
