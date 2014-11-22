@@ -1,9 +1,10 @@
-package gocrypto
+package crypto
 
 import (
 	//"fmt"
-	"github.com/bmizerany/assert"
 	"testing"
+
+	"github.com/bmizerany/assert"
 )
 
 var (
